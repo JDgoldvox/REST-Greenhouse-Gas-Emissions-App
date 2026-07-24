@@ -1,26 +1,49 @@
 ﻿import style from "./Table.module.css"
+import generalStyle from "../../General.module.css"
 
 export default function Table()
 {
     return (
-        <>
-            <table>
+        <table className = {style.table}>
+            <caption>
+                insert epic name
+            </caption>
+            <thead>
                 <tr>
-                    <th>Company</th>
-                    <th>Contact</th>
-                    <th>Country</th>
+                    <th>Year</th>
+                    <th>Insert Country Name</th>
+                    <th>Insert Country Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1999</td>
+                    <td>112314</td>
+                    <td>134531</td>
                 </tr>
                 <tr>
-                    <td>Alfreds Futterkiste</td>
-                    <td>Maria Anders</td>
-                    <td>Germany</td>
+                    <td>2000</td>
+                    <td>135135135</td>
+                    <td>135135153</td>
                 </tr>
                 <tr>
-                    <td>Centro comercial Moctezuma</td>
-                    <td>Francisco Chang</td>
-                    <td>Mexico</td>
+                    <td>2001</td>
+                    <td>135135</td>
+                    <td>135315</td>
                 </tr>
-            </table>
-        </>
+                <tr>
+                    <td>2002</td>
+                    <td>W135531135</td>
+                    <td>13513135</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>---</td>
+                    <td>---</td>
+                    <td>---</td>
+                </tr>
+            </tfoot>
+        </table>
     )
 }
