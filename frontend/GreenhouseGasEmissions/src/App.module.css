@@ -1,0 +1,20 @@
+
+.mainLayout
+{
+    display: flex;
+    flex: 1;
+}
+
+.filterLayout
+{
+    width: 33%;
+    height: 100%;
+    background-color: #c51f1f;
+}
+
+.tableLayout
+{
+    width: 67%;
+    height: 100%;
+    background-color: #3c4fa2;
+}
