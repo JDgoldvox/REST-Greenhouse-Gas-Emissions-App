@@ -2,6 +2,7 @@ import { useState } from 'react'
 import style from './App.module.css'
 import Title from './components/Title.tsx'
 import Filter from './components/filter/Filter.tsx'
+import Table from './components/table/Table.tsx'
 
 function App() {
 
@@ -11,11 +12,10 @@ function App() {
           
           <div className = {style.mainLayout}>
               <div className = {style.filterLayout}>
-                  <p> hi </p>
                   <Filter/>
               </div>
               <div className = {style.tableLayout}>
-                  <p> hi </p>
+                  <Table/>
               </div>
           </div>
       </>
