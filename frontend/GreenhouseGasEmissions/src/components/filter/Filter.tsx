@@ -1,11 +1,13 @@
 ﻿import style from "./Filter.module.css"
 import generalStyle from "../../General.module.css"
+// @ts-ignore
 import DropDown from "../dropdown/DropDown.tsx"
 import {useEffect, useState} from "react"
 import {CodelistService} from "../../Services/CodelistService.ts";
+import {UrlService} from "../../Services/UrlService.ts";
 
 interface FilterProps {
-    setUrl : (url: string) => void;
+    setUrl : (url: string | null) => void;
 }
 
 interface FilterState {
@@ -19,15 +21,42 @@ interface FilterState {
     accountingEntries: string[] | null;
 }
 
+export interface Option{
+    id: string;
+    name: string
+}
+
+interface OptionList
+{
+    frequency: Option[];
+     pollutant: Option[];
+     yearFrom: (Option[] | string);
+     yearTo: (Option[] | string);
+     unit: Option[];
+     countries: Option[];
+     interactors: Option[];
+     accountingEntries: Option[];
+}
+
 export default function Filter({setUrl}: FilterProps)
 {
     const [isCountryOpen, setIsCountryOpen] = useState(false)
     const [isInteractorOpen, setIsInteractorOpen] = useState(false)
     const [isAccountingEntryOpen, setIsAccountingEntryOpen] = useState(false)
 
-    const countries: string[] = ["Australia" , "Antartica"]
-    const interactors: string[] = ["logging" , "fishing"]
-    const accountingEntries: string[] = ["entry A" , "entry b"]
+    //Options
+    const [options, setOptions] = useState<OptionList>(
+        {
+            frequency: [],
+            pollutant: [],
+            yearFrom: [],
+            yearTo: [],
+            unit: [],
+            countries: [],
+            interactors: [],
+            accountingEntries: [],
+        }
+    )
 
     const [filters, setFilters] = useState<FilterState>({
         frequency: null,
@@ -41,12 +70,35 @@ export default function Filter({setUrl}: FilterProps)
     })
     
     useEffect(()=> {
-        async function LoadFrequencies() {
-            const codes = await CodelistService({url: "https://data.un.org/WS/rest/codelist/ESTAT/CL_AIRPOL"});
-        }
-
-        LoadFrequencies();
+        let frequency : { id: string; name: string }[] = [];
+        let pollutant : { id: string; name: string }[] = [];
+        let unit : { id: string; name: string }[] = [];
+        let countries : { id: string; name: string }[] = [];
+        let interactors : { id: string; name: string }[] = [];
+        let accountingEntries : { id: string; name: string }[] = [];
         
+        async function RequestAllOptions() {
+            frequency = await CodelistService({url: "https://data.un.org/WS/rest/codelist/SDMX/CL_FREQ"});
+            pollutant = await CodelistService({url: "https://data.un.org/WS/rest/codelist/ESTAT/CL_AIRPOL"});
+            unit = await CodelistService({url: "https://data.un.org/WS/rest/codelist/IMF/CL_UNIT"});
+            countries = await CodelistService({url: "https://data.un.org/WS/rest/codelist/IMF/CL_AREA"});
+            interactors = await CodelistService({url: "https://data.un.org/WS/rest/codelist/ESTAT/CL_INTERACTORS"});
+            accountingEntries = await CodelistService({url: "https://data.un.org/WS/rest/codelist/IMF/CL_ACCOUNT_ENTRY"});
+            
+            setOptions( () => {
+                return {
+                    frequency: frequency,
+                    pollutant: pollutant,
+                    unit: unit,
+                    accountingEntries: accountingEntries,
+                    countries: countries,
+                    interactors: interactors,
+                    yearFrom: ["2012", "2014"],
+                    yearTo: ["2012", "2014"], 
+                }
+            });
+        }
+        RequestAllOptions();
     }, []);
     
     return(
@@ -57,9 +109,7 @@ export default function Filter({setUrl}: FilterProps)
                 <li>
                     <label> Reporting Frequency
                         <select onChange={(e) => console.log(e.target.value)}>
-                            <option value="someOption">Some option</option>
-                            <option value="otherOption">Other option</option>
-                            <option value="someOption">Some option</option>
+                            {MapDropDownOptionsForSelects(options.frequency)}
                         </select>
                     </label>
                 </li>
@@ -68,8 +118,7 @@ export default function Filter({setUrl}: FilterProps)
                 <li>
                     <label> Air pollutant
                         <select onChange={(e) => console.log(e.target.value)}>
-                            <option value="someOption">Some option</option>
-                            <option value="otherOption">Other option</option>
+                            {MapDropDownOptionsForSelects(options.pollutant)}
                         </select>
                     </label>
                 </li>
@@ -77,7 +126,7 @@ export default function Filter({setUrl}: FilterProps)
                 {/* Country */}
                 <li>
                     <DropDown label={"country"} 
-                              items={countries} 
+                              items= {options.countries}
                               isOpen={isCountryOpen} 
                               setIsOpen={setIsCountryOpen}/>
                 </li>
@@ -87,16 +136,12 @@ export default function Filter({setUrl}: FilterProps)
                     <div className = {generalStyle.flex}>
                         <label> from
                             <select onChange={(e) => console.log(e.target.value)}>
-                                <option value="2010">2010</option>
-                                <option value="2011">2011</option>
-                                <option value="2012">2012</option>
+                                {MapDropDownOptionsForSelects(options.yearFrom)}
                             </select>
                         </label>
                         <label> to
                             <select onChange={(e) => console.log(e.target.value)}>
-                                <option value="2010">2011</option>
-                                <option value="2011">2012</option>
-                                <option value="2012">2013</option>
+                                {MapDropDownOptionsForSelects(options.yearTo)}
                             </select>
                         </label>
                     </div>
@@ -105,7 +150,7 @@ export default function Filter({setUrl}: FilterProps)
                 {/* Interactor */}
                 <li>
                     <DropDown label={"Interactor"} 
-                              items={interactors} 
+                              items={options.interactors}
                               isOpen={isInteractorOpen} 
                               setIsOpen={setIsInteractorOpen}/>
                 </li>
@@ -114,8 +159,7 @@ export default function Filter({setUrl}: FilterProps)
                 <li>
                     <label> Unit
                         <select onChange={(e) => console.log(e.target.value)}>
-                            <option value="someOption">Tons</option>
-                            <option value="otherOption">Omg</option>
+                            {MapDropDownOptionsForSelects(options.unit)}
                         </select>
                     </label>
                 </li>
@@ -123,16 +167,25 @@ export default function Filter({setUrl}: FilterProps)
                 {/* Accounting Entry */}
                 <li>
                     <DropDown label={"Accounting Entry"}
-                              items={accountingEntries}
+                              items={options.accountingEntries}
                               isOpen={isAccountingEntryOpen}
                               setIsOpen={setIsAccountingEntryOpen}/>
                 </li>
 
                 {/* Apply Filters button */}
                 <li>
-                    <button> Apply Filters </button>
+                    <button onClick={() => {
+                        const url : string | null = UrlService(filters);
+                        setUrl(url);
+                    }}> Apply Filters </button>
                 </li>
             </ul>
         </div>
     )
+    
+    function MapDropDownOptionsForSelects(list : Option[] | undefined) {
+        return list?.map((item, index) => (
+            <option key={`${item.id}-${index}`}>{item.name}</option>
+        ))
+    }
 }

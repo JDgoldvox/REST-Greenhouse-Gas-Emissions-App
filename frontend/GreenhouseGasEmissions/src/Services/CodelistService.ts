@@ -1,5 +1,4 @@
 ﻿
-
 export async function CodelistService({url} : {url: string}) {
     
     try {
@@ -7,7 +6,7 @@ export async function CodelistService({url} : {url: string}) {
         
         if(!response.ok)
         {
-            throw new Error('Failed to fetch data for {url}');
+            throw new Error(`Failed to fetch data for ${url}`);
         }
         
         const result = await response.text(); //xml raw text
@@ -21,12 +20,19 @@ export async function CodelistService({url} : {url: string}) {
         
         codeElements.forEach(codeEl => {
             const id = codeEl.getAttribute("id") || ""; 
-            const nameEl = codeEl.querySelector("*|Name");
-            const name = nameEl?.textContent?.trim() || "";
+            const nameElement = codeEl.querySelector("*|Name");
+            let name = nameElement?.textContent || "";
+
+            //Trim everything after the ( character
+            const parenthesisIndex = name.indexOf("(");
+            if (parenthesisIndex !== -1) {
+                name = name.substring(0, parenthesisIndex).trim();
+            }
+            
             codes.push({ id, name });
         });
 
-        console.log("Parsed Codes:", codes);
+        //console.log("Parsed Codes:", codes);
         return codes;
     }
     catch (error) {

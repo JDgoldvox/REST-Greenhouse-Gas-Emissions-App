@@ -1,26 +1,36 @@
 ﻿import style from "./Dropdown.module.css"
+import type {Option} from "../filter/Filter.tsx"
 
 interface DropdownProps {
     label: string;
-    items: string[];
+    items: Option[] | undefined;
     isOpen: boolean;
-    setIsOpen: (isCountryOpen: boolean) => void;
+    setIsOpen: (isOpen: boolean) => void;
 }        
         
 export default function Dropdown({label , items , isOpen , setIsOpen} : DropdownProps) {
+    
+    if(items === undefined) return (
+        <>
+            {/*{*/}
+            {/*     console.log("items is undefined");*/}
+            {/*}*/}
+        </>
+    )
+    
     return (
         <label> {label}
             <div className={style.DropdownWrapper}>
                 <button onClick={() => setIsOpen(!isOpen)}>
-                    Select Country
+                    Select {label}
                 </button>
 
                 {isOpen && (
                     <div className={style.DropdownMenu}>
-                        {items.map((item : string) => (
-                            <label key={item}>
+                        {items.map((item,index) => (
+                            <label key={`${item.id}-${index}`}>
                                 <input type="checkbox"/>
-                                {item}
+                                {item.name}
                             </label>
                         ))
                         }
