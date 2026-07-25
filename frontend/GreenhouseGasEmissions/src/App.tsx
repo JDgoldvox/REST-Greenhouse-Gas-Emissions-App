@@ -5,7 +5,6 @@ import Filter from './components/filter/Filter.tsx'
 import Table from './components/table/Table.tsx'
 
 function App() {
-    
     const [url, setUrl] = useState<string | null>(null);
     
     return (
@@ -14,7 +13,7 @@ function App() {
           
           <div className = {style.mainLayout}>
               <div className = {style.filterLayout}>
-                  <Filter/>
+                  <Filter setUrl = {setUrl}/>
               </div>
               <div className = {style.tableLayout}>
                   <Table/>

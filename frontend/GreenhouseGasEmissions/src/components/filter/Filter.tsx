@@ -1,10 +1,22 @@
 ﻿import style from "./Filter.module.css"
 import generalStyle from "../../General.module.css"
 import DropDown from "../dropdown/DropDown.tsx"
-import {useState} from "react"
+import {useEffect, useState} from "react"
+import {CodelistService} from "../../Services/CodelistService.ts";
 
 interface FilterProps {
     setUrl : (url: string) => void;
+}
+
+interface FilterState {
+    frequency: string | null;
+    pollutant: string | null;
+    yearFrom: string | null;
+    yearTo: string | null;
+    unit: string | null;
+    countries: string[] | null;
+    interactors: string[] | null;
+    accountingEntries: string[] | null;
 }
 
 export default function Filter({setUrl}: FilterProps)
@@ -16,6 +28,26 @@ export default function Filter({setUrl}: FilterProps)
     const countries: string[] = ["Australia" , "Antartica"]
     const interactors: string[] = ["logging" , "fishing"]
     const accountingEntries: string[] = ["entry A" , "entry b"]
+
+    const [filters, setFilters] = useState<FilterState>({
+        frequency: null,
+        pollutant: null,
+        yearFrom: null,
+        yearTo: null,
+        unit: null,
+        countries: null,
+        interactors: null,
+        accountingEntries: null,
+    })
+    
+    useEffect(()=> {
+        async function LoadFrequencies() {
+            const codes = await CodelistService({url: "https://data.un.org/WS/rest/codelist/ESTAT/CL_AIRPOL"});
+        }
+
+        LoadFrequencies();
+        
+    }, []);
     
     return(
         <div>
@@ -94,6 +126,11 @@ export default function Filter({setUrl}: FilterProps)
                               items={accountingEntries}
                               isOpen={isAccountingEntryOpen}
                               setIsOpen={setIsAccountingEntryOpen}/>
+                </li>
+
+                {/* Apply Filters button */}
+                <li>
+                    <button> Apply Filters </button>
                 </li>
             </ul>
         </div>
