@@ -1,0 +1,17 @@
+﻿.DropdownWrapper {
+    display: inline-block;
+    position: relative;
+}
+
+.DropdownMenu {
+    Display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: absolute;
+    background: white;
+    border: 1px solid black;
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+}

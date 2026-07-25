@@ -1,8 +1,13 @@
 ﻿import style from "./Filter.module.css"
 import generalStyle from "../../General.module.css"
+import DropDown from "../dropdown/DropDown.tsx"
 import {useState} from "react"
 
-export default function Filter()
+interface FilterProps {
+    setUrl : (url: string) => void;
+}
+
+export default function Filter({setUrl}: FilterProps)
 {
     const [isCountryOpen, setIsCountryOpen] = useState(false)
     const [isInteractorOpen, setIsInteractorOpen] = useState(false)
@@ -15,6 +20,8 @@ export default function Filter()
     return(
         <div>
             <ul className = {style.filterList}>
+                
+                 {/*Reporting Frequency */}
                 <li>
                     <label> Reporting Frequency
                         <select onChange={(e) => console.log(e.target.value)}>
@@ -24,6 +31,8 @@ export default function Filter()
                         </select>
                     </label>
                 </li>
+
+                {/* Air pollutant */}
                 <li>
                     <label> Air pollutant
                         <select onChange={(e) => console.log(e.target.value)}>
@@ -32,26 +41,16 @@ export default function Filter()
                         </select>
                     </label>
                 </li>
-                <li>
-                    <label> Country
-                        <div className={style.DropdownWrapper}>
-                            <button onClick={() => setIsCountryOpen(!isCountryOpen)}>
-                                Select Country
-                            </button>
 
-                            {isCountryOpen && (
-                                <div className={style.DropdownMenu}>
-                                    {countries.map((country) => (
-                                        <label key={country}>
-                                            <input type="checkbox"/>
-                                            {country}
-                                        </label>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </label>
+                {/* Country */}
+                <li>
+                    <DropDown label={"country"} 
+                              items={countries} 
+                              isOpen={isCountryOpen} 
+                              setIsOpen={setIsCountryOpen}/>
                 </li>
+
+                {/* time line */}
                 <li>
                     <div className = {generalStyle.flex}>
                         <label> from
@@ -70,26 +69,16 @@ export default function Filter()
                         </label>
                     </div>
                 </li>
-                <li>
-                    <label> Interactors
-                        <div className={style.DropdownWrapper}>
-                            <button onClick={() => setIsInteractorOpen(!isInteractorOpen)}>
-                                Select Sector
-                            </button>
 
-                            {isInteractorOpen && (
-                                <div className={style.DropdownMenu}>
-                                    {interactors.map((interactor) => (
-                                        <label key={interactor}>
-                                            <input type="checkbox"/>
-                                            {interactor}
-                                        </label>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </label>
+                {/* Interactor */}
+                <li>
+                    <DropDown label={"Interactor"} 
+                              items={interactors} 
+                              isOpen={isInteractorOpen} 
+                              setIsOpen={setIsInteractorOpen}/>
                 </li>
+
+                {/* Unit of measurement */}
                 <li>
                     <label> Unit
                         <select onChange={(e) => console.log(e.target.value)}>
@@ -98,27 +87,13 @@ export default function Filter()
                         </select>
                     </label>
                 </li>
-                <li>
-                    <label> Accounting Entry
-                        <div className={style.DropdownWrapper}>
-                            <button onClick={() => setIsAccountingEntryOpen(!isAccountingEntryOpen)}>
-                                Select Sector
-                            </button>
 
-                            {isAccountingEntryOpen && (
-                                <div className={style.DropdownMenu}>
-                                    {accountingEntries.map((entry) => (
-                                        <label key={entry}>
-                                            <input type="checkbox"/>
-                                            {entry}
-                                        </label>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </label>
-                    
-                    
+                {/* Accounting Entry */}
+                <li>
+                    <DropDown label={"Accounting Entry"}
+                              items={accountingEntries}
+                              isOpen={isAccountingEntryOpen}
+                              setIsOpen={setIsAccountingEntryOpen}/>
                 </li>
             </ul>
         </div>

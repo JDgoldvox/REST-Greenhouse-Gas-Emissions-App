@@ -3,6 +3,8 @@ import generalStyle from "../../General.module.css"
 
 export default function Table()
 {
+    
+    
     return (
         <table className = {style.table}>
             <caption>
@@ -33,17 +35,17 @@ export default function Table()
                 </tr>
                 <tr>
                     <td>2002</td>
-                    <td>W135531135</td>
+                    <td>135531135</td>
                     <td>13513135</td>
                 </tr>
             </tbody>
-            <tfoot>
-                <tr>
-                    <td>---</td>
-                    <td>---</td>
-                    <td>---</td>
-                </tr>
-            </tfoot>
+            {/*<tfoot>*/}
+            {/*    <tr>*/}
+            {/*        <td>Overall Total</td>*/}
+            {/*        <td>---</td>*/}
+            {/*        <td>---</td>*/}
+            {/*    </tr>*/}
+            {/*</tfoot>*/}
         </table>
     )
 }

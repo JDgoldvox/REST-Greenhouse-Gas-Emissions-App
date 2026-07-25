@@ -5,8 +5,10 @@ import Filter from './components/filter/Filter.tsx'
 import Table from './components/table/Table.tsx'
 
 function App() {
-
-  return (
+    
+    const [url, setUrl] = useState<string | null>(null);
+    
+    return (
       <>
           <Title/>
           
@@ -19,7 +21,7 @@ function App() {
               </div>
           </div>
       </>
-  )
+   )
 }
 
 export default App
