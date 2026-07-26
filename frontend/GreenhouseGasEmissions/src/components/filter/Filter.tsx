@@ -10,7 +10,7 @@ interface FilterProps {
     setUrl : (url: string | null) => void;
 }
 
-interface FilterState {
+export interface FilterState {
     frequency: string | null;
     pollutant: string | null;
     yearFrom: string | null;
@@ -70,20 +70,19 @@ export default function Filter({setUrl}: FilterProps)
         accountingEntries: null,
     })
     
-    function HandleSingleFilter(value: String, param: keyof FilterState)
+    function HandleSingleFilter(value: string, param: keyof FilterState)
     {
         setFilters(prev => ({
             ...prev,
             [param]: value
         }));
         
-        console.log(`Adding : ${value}`);
+        //console.log(`Adding : ${value}`);
     }
     
     function AddToMultipleFilters(value: string, param: keyof FilterState)
     {
         setFilters(prev => {
-            
             //get current list, or null if not set
             const currentList = (prev[param] as string[]) || [];
 
@@ -95,10 +94,9 @@ export default function Filter({setUrl}: FilterProps)
         });
     }
 
-    function RemoveFromMultipleFilters(param: keyof FilterState, valueToRemove: string)
+    function RemoveFromMultipleFilters(valueToRemove: string, param: keyof FilterState)
     {
         setFilters(prev => {
-
             //get current list, or null if not set
             const currentList = (prev[param] as string[]) || [];
             
@@ -176,7 +174,11 @@ export default function Filter({setUrl}: FilterProps)
                     <DropDown label={"country"} 
                               items= {options.countries}
                               isOpen={isCountryOpen} 
-                              setIsOpen={setIsCountryOpen}/>
+                              setIsOpen={setIsCountryOpen}
+                              AddToListCallback={AddToMultipleFilters}
+                              removeFromListCallback={RemoveFromMultipleFilters}
+                              param="countries"
+                    />
                 </li>
 
                 {/* time line */}
@@ -200,7 +202,12 @@ export default function Filter({setUrl}: FilterProps)
                     <DropDown label={"Interactor"} 
                               items={options.interactors}
                               isOpen={isInteractorOpen} 
-                              setIsOpen={setIsInteractorOpen}/>
+                              setIsOpen={setIsInteractorOpen}
+                              AddToListCallback={AddToMultipleFilters}
+                              removeFromListCallback={RemoveFromMultipleFilters}
+                              param="interactors"
+                    
+                    />
                 </li>
 
                 {/* Unit of measurement */}
@@ -217,7 +224,11 @@ export default function Filter({setUrl}: FilterProps)
                     <DropDown label={"Accounting Entry"}
                               items={options.accountingEntries}
                               isOpen={isAccountingEntryOpen}
-                              setIsOpen={setIsAccountingEntryOpen}/>
+                              setIsOpen={setIsAccountingEntryOpen}
+                              AddToListCallback={AddToMultipleFilters}
+                              removeFromListCallback={RemoveFromMultipleFilters}
+                              param="accountingEntries"
+                    />
                 </li>
 
                 {/* Apply Filters button */}

@@ -1,52 +1,83 @@
 ﻿import style from "./Dropdown.module.css"
 import type {Option} from "../filter/Filter.tsx"
+import type {FilterState} from "../filter/Filter.tsx"
 
 interface DropdownProps {
     label: string;
     items: Option[] | undefined;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
-    AddToListCallback?: (item: string) => void;
-    removeFromListCallback?: (item: string) => void;
+    AddToListCallback: (item: string, state: keyof FilterState) => void;
+    removeFromListCallback: (item: string, state: keyof FilterState) => void;
+    param: keyof FilterState;
 }        
         
-export default function Dropdown({label , items , isOpen , setIsOpen, AddToListCallback, removeFromListCallback} : DropdownProps) {
+export default function Dropdown({label , items , isOpen , setIsOpen, AddToListCallback, removeFromListCallback, param} : DropdownProps) {
     
-    if(items === undefined) return (
-        <>
-            {/*{*/}
-            {/*     console.log("items is undefined");*/}
-            {/*}*/}
-        </>
-    )
+    function ChangeState( isAdd: boolean, value: string, param: keyof FilterState)
+    {
+        if(isAdd)
+        {
+            AddToListCallback(value, param);
+        }
+        else
+        {
+            removeFromListCallback(value, param);
+        }
+    }
     
-    return (
-        <label> {label}
-            <div className={style.DropdownWrapper}>
-                <button onClick={() => setIsOpen(!isOpen)}>
-                    Select {label}
-                </button>
+    if(items === undefined || items === null)
+    {
+        console.log("items is undefined");
+        return <></>
+    }
 
-                {isOpen && (
-                    <div className={style.DropdownMenu}> {
-                        items.map((item,index) => (
-                            <label key={`${item.id}-${index}`}>
-                                <input type="checkbox"/>
-                                {item.name}
-                            </label> ))
-                        }
-                    </div>
-                )}
-            </div>
-        </label>
-    )
+    return (
+    <label> {label}
+        <div className={style.DropdownWrapper}>
+            <button onClick={() => setIsOpen(!isOpen)}>
+                Select {label}
+            </button>
+
+            {isOpen && (
+                <div className={style.DropdownMenu}> {
+                    items.map((item,index) => (
+                        <label key={`${item.id}-${index}`}>
+                            <input type="checkbox" value={item.id} onChange={(e) => {
+                                console.log(e.target.checked);
+                                ChangeState(
+                                    e.target.checked,
+                                    item.id,
+                                    param
+                                )
+                            }}/>
+                            {item.name}
+                        </label> ))
+                }
+                </div>
+            )}
+        </div>
+    </label>
+)
 }
 
-// function MapDropdownItems({items} : {items: string[]}) {
-//     items.map((item : string) => (
-//         <label key={item}>
-//             <input type="checkbox"/>
-//             {item}
-//         </label>
-//     ))
-// }
+// return (
+//     <label> {label}
+//         <div className={style.DropdownWrapper}>
+//             <button onClick={() => setIsOpen(!isOpen)}>
+//                 Select {label}
+//             </button>
+//
+//             {isOpen && (
+//                 <div className={style.DropdownMenu}> {
+//                     items.map((item,index) => (
+//                         <label key={`${item.id}-${index}`}>
+//                             <input type="checkbox" value={item.id} onChange={() => {}}/>
+//                             {item.name}
+//                         </label> ))
+//                 }
+//                 </div>
+//             )}
+//         </div>
+//     </label>
+// )
