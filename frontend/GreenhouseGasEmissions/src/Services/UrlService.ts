@@ -48,7 +48,12 @@ export function UrlService(state: FilterState)
         bridgeItems + "." + airpol + "." + sto + "." +
         unitMeasure + "." + product + "." + sector;
     
-    url = baseUrl + keys + "/all/";
+    //startPeriod=2004-01-02&endPeriod=2018-12-14
+    const yearFrom = state.yearFrom === null ? "2004" : state.yearFrom;
+    const yearTo = state.yearTo === null ? "2018" : state.yearTo;
+    const params : string = "?startPeriod=" + yearFrom + "-01-01&endPeriod=" + yearTo;
+    
+    url = baseUrl + keys + "/all/" + params;
     
     console.log(url);
     
