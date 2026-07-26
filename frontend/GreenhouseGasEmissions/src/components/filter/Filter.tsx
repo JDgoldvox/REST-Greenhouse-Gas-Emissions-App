@@ -44,7 +44,7 @@ export default function Filter({setUrl}: FilterProps)
     const [isInteractorOpen, setIsInteractorOpen] = useState(false)
     const [isAccountingEntryOpen, setIsAccountingEntryOpen] = useState(false)
 
-    //Options
+    // Options for the filter dropdowns
     const [options, setOptions] = useState<OptionList>(
         {
             frequency: [],
@@ -57,7 +57,8 @@ export default function Filter({setUrl}: FilterProps)
             accountingEntries: [],
         }
     )
-
+    
+    // State tracking for filter selections
     const [filters, setFilters] = useState<FilterState>({
         frequency: null,
         pollutant: null,
@@ -69,14 +70,47 @@ export default function Filter({setUrl}: FilterProps)
         accountingEntries: null,
     })
     
-    function HandleSingleFilter(e : React.ChangeEvent<HTMLSelectElement>, param: keyof FilterState)
+    function HandleSingleFilter(value: String, param: keyof FilterState)
     {
         setFilters(prev => ({
             ...prev,
-            [param]: e.target.value
+            [param]: value
         }));
         
-        console.log(`Adding : ${e.target.value}`);
+        console.log(`Adding : ${value}`);
+    }
+    
+    function AddToMultipleFilters(value: string, param: keyof FilterState)
+    {
+        setFilters(prev => {
+            
+            //get current list, or null if not set
+            const currentList = (prev[param] as string[]) || [];
+
+            //add to existing items
+            return {
+                ...prev,
+                [param]: [...currentList, value] 
+            };
+        });
+    }
+
+    function RemoveFromMultipleFilters(param: keyof FilterState, valueToRemove: string)
+    {
+        setFilters(prev => {
+
+            //get current list, or null if not set
+            const currentList = (prev[param] as string[]) || [];
+            
+            //remove 'value' from exiting items
+            const updatedList = currentList.filter(item => item !== valueToRemove);
+            
+            //add to existing items
+            return {
+                ...prev,
+                [param]: updatedList
+            };
+        });
     }
 
     useEffect(() => {
@@ -122,7 +156,7 @@ export default function Filter({setUrl}: FilterProps)
                  {/*Reporting Frequency */}
                 <li>
                     <label> Reporting Frequency
-                        <select onChange={(e) => HandleSingleFilter(e, "frequency")}>
+                        <select onChange={(e) => HandleSingleFilter(e.target.value, "frequency")}>
                             {MapDropDownOptionsForSelects(options.frequency)}
                         </select>
                     </label>
@@ -131,7 +165,7 @@ export default function Filter({setUrl}: FilterProps)
                 {/* Air pollutant */}
                 <li>
                     <label> Air pollutant
-                        <select onChange={(e) => HandleSingleFilter(e, "pollutant")}>
+                        <select onChange={(e) => HandleSingleFilter(e.target.value, "pollutant")}>
                             {MapDropDownOptionsForSelects(options.pollutant)}
                         </select>
                     </label>
@@ -149,12 +183,12 @@ export default function Filter({setUrl}: FilterProps)
                 <li>
                     <div className = {generalStyle.flex}>
                         <label> from
-                            <select onChange={(e) => HandleSingleFilter(e, "yearFrom")}>
+                            <select onChange={(e) => HandleSingleFilter(e.target.value, "yearFrom")}>
                                 {MapDropDownOptionsForSelects(options.yearFrom)}
                             </select>
                         </label>
                         <label> to
-                            <select onChange={(e) => HandleSingleFilter(e, "yearTo")}>
+                            <select onChange={(e) => HandleSingleFilter(e.target.value, "yearTo")}>
                                 {MapDropDownOptionsForSelects(options.yearTo)}
                             </select>
                         </label>
@@ -172,7 +206,7 @@ export default function Filter({setUrl}: FilterProps)
                 {/* Unit of measurement */}
                 <li>
                     <label> Unit
-                        <select onChange={(e) => HandleSingleFilter(e, "unit")}>
+                        <select onChange={(e) => HandleSingleFilter(e.target.value, "unit")}>
                             {MapDropDownOptionsForSelects(options.unit)}
                         </select>
                     </label>

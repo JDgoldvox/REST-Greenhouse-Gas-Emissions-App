@@ -6,9 +6,11 @@ interface DropdownProps {
     items: Option[] | undefined;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
+    AddToListCallback?: (item: string) => void;
+    removeFromListCallback?: (item: string) => void;
 }        
         
-export default function Dropdown({label , items , isOpen , setIsOpen} : DropdownProps) {
+export default function Dropdown({label , items , isOpen , setIsOpen, AddToListCallback, removeFromListCallback} : DropdownProps) {
     
     if(items === undefined) return (
         <>
@@ -26,13 +28,12 @@ export default function Dropdown({label , items , isOpen , setIsOpen} : Dropdown
                 </button>
 
                 {isOpen && (
-                    <div className={style.DropdownMenu}>
-                        {items.map((item,index) => (
+                    <div className={style.DropdownMenu}> {
+                        items.map((item,index) => (
                             <label key={`${item.id}-${index}`}>
                                 <input type="checkbox"/>
                                 {item.name}
-                            </label>
-                        ))
+                            </label> ))
                         }
                     </div>
                 )}
