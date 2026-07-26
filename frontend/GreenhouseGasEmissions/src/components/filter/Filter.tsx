@@ -30,8 +30,8 @@ interface OptionList
 {
     frequency: Option[];
      pollutant: Option[];
-     yearFrom: (Option[] | string);
-     yearTo: (Option[] | string);
+     yearFrom: (Option | string)[];
+     yearTo: (Option | string)[];
      unit: Option[];
      countries: Option[];
      interactors: Option[];
@@ -183,9 +183,33 @@ export default function Filter({setUrl}: FilterProps)
         </div>
     )
     
-    function MapDropDownOptionsForSelects(list : Option[] | undefined) {
-        return list?.map((item, index) => (
-            <option key={`${item.id}-${index}`}>{item.name}</option>
-        ))
+    function MapDropDownOptionsForSelects(list : (Option | String)[] | null | undefined) {
+        if(list === undefined || list === null) return (<> </>);
+        
+        return list?.map((item, index) => {
+
+            let key : string = "";
+            let value : string = "";
+            
+            if(typeof item === 'string')
+            {
+                key = `${item}-${index}`;
+                value = item;
+            }
+            else
+            {
+                if ("id" in item) { // enclose in conditions to stop warnings
+                    key = `${item.id}-${index}`;
+                }
+                if ("name" in item) {
+                    value = item.name;
+                }
+            }
+            
+            return (
+                <option key={key}>{value}</option>
+            )}
+        );
     }
+    
 }
