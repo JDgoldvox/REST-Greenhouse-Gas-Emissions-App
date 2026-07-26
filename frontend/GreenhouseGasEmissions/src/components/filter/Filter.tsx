@@ -69,6 +69,20 @@ export default function Filter({setUrl}: FilterProps)
         accountingEntries: null,
     })
     
+    function HandleSingleFilter(e : React.ChangeEvent<HTMLSelectElement>, param: keyof FilterState)
+    {
+        setFilters(prev => ({
+            ...prev,
+            [param]: e.target.value
+        }));
+        
+        console.log(`Adding : ${e.target.value}`);
+    }
+
+    useEffect(() => {
+        console.log("Filters changed:", filters);
+    }, [filters]);
+    
     useEffect(()=> {
         let frequency : { id: string; name: string }[] = [];
         let pollutant : { id: string; name: string }[] = [];
@@ -108,7 +122,7 @@ export default function Filter({setUrl}: FilterProps)
                  {/*Reporting Frequency */}
                 <li>
                     <label> Reporting Frequency
-                        <select onChange={(e) => console.log(e.target.value)}>
+                        <select onChange={(e) => HandleSingleFilter(e, "frequency")}>
                             {MapDropDownOptionsForSelects(options.frequency)}
                         </select>
                     </label>
@@ -117,7 +131,7 @@ export default function Filter({setUrl}: FilterProps)
                 {/* Air pollutant */}
                 <li>
                     <label> Air pollutant
-                        <select onChange={(e) => console.log(e.target.value)}>
+                        <select onChange={(e) => HandleSingleFilter(e, "pollutant")}>
                             {MapDropDownOptionsForSelects(options.pollutant)}
                         </select>
                     </label>
@@ -135,12 +149,12 @@ export default function Filter({setUrl}: FilterProps)
                 <li>
                     <div className = {generalStyle.flex}>
                         <label> from
-                            <select onChange={(e) => console.log(e.target.value)}>
+                            <select onChange={(e) => HandleSingleFilter(e, "yearFrom")}>
                                 {MapDropDownOptionsForSelects(options.yearFrom)}
                             </select>
                         </label>
                         <label> to
-                            <select onChange={(e) => console.log(e.target.value)}>
+                            <select onChange={(e) => HandleSingleFilter(e, "yearTo")}>
                                 {MapDropDownOptionsForSelects(options.yearTo)}
                             </select>
                         </label>
@@ -158,7 +172,7 @@ export default function Filter({setUrl}: FilterProps)
                 {/* Unit of measurement */}
                 <li>
                     <label> Unit
-                        <select onChange={(e) => console.log(e.target.value)}>
+                        <select onChange={(e) => HandleSingleFilter(e, "unit")}>
                             {MapDropDownOptionsForSelects(options.unit)}
                         </select>
                     </label>
@@ -182,34 +196,40 @@ export default function Filter({setUrl}: FilterProps)
             </ul>
         </div>
     )
-    
-    function MapDropDownOptionsForSelects(list : (Option | String)[] | null | undefined) {
-        if(list === undefined || list === null) return (<> </>);
-        
-        return list?.map((item, index) => {
-
-            let key : string = "";
-            let value : string = "";
-            
-            if(typeof item === 'string')
-            {
-                key = `${item}-${index}`;
-                value = item;
-            }
-            else
-            {
-                if ("id" in item) { // enclose in conditions to stop warnings
-                    key = `${item.id}-${index}`;
-                }
-                if ("name" in item) {
-                    value = item.name;
-                }
-            }
-            
-            return (
-                <option key={key}>{value}</option>
-            )}
-        );
-    }
-    
 }
+
+function MapDropDownOptionsForSelects(list : (Option | String)[] | null | undefined) {
+    if(list === undefined || list === null) return (<> </>);
+
+    return list?.map((item, index) => {
+
+        let key : string = "";
+        let value : string = "";
+        let id : string = "";
+
+        if(typeof item === 'string')
+        {
+            key = `${item}-${index}`;
+            value = item;
+            id = item;
+        }
+        else
+        {
+            if ("id" in item) { // enclose in conditions to stop warnings
+                key = `${item.id}-${index}`;
+            }
+            if ("name" in item) {
+                value = item.name;
+            }
+            if ("id" in item) {
+                id = item.id;
+            }
+        }
+
+        return (
+            <option key={key} value={id}>{value}</option>
+        )}
+    );
+}
+
+
