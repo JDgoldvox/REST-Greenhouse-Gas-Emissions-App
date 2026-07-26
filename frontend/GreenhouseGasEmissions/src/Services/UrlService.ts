@@ -2,12 +2,10 @@
 
 export function UrlService(state: FilterState)
 {
-    
-    //.AU........../ALL/?detail=full&dimensionAtObservation=TIME_PERIOD
-    
     let url : string | null = null;
     const baseUrl = "https://data.un.org/ws/rest/data/ESTAT,DF_SEEA_AEA,1.3/";
-
+    
+    // order of keys
     // FREQ,
     // REF_AREA,
     // DEMAND_PROD,
@@ -21,7 +19,7 @@ export function UrlService(state: FilterState)
     // PRODUCT,
     // SECTOR
     
-    //defaults
+    //default keys
     let freq = "";
     let refArea =  "AU";
     let demandProd = "" //not included
@@ -35,6 +33,7 @@ export function UrlService(state: FilterState)
     let product = ""; //not included
     let sector = ""; //not included
     
+    //set keys
     if(state.frequency !== null) freq = state.frequency;
     if(state.countries !== null) refArea = ConcatinateList(state.countries);
     if(state.pollutant !== null) demandProd = state.pollutant;
@@ -43,16 +42,19 @@ export function UrlService(state: FilterState)
     if(state.pollutant !== null) airpol = state.pollutant;
     if(state.unit !== null) unitMeasure = state.unit;
 
+    //create key string
     let keys = freq + "." + refArea + "." + demandProd + "." +
         accountingEntry + "." + counterpartArea + "." + interactors + "." +
         bridgeItems + "." + airpol + "." + sto + "." +
         unitMeasure + "." + product + "." + sector;
     
-    //startPeriod=2004-01-02&endPeriod=2018-12-14
+    // create param string
+    // example startPeriod=2004&endPeriod=2018
     const yearFrom = state.yearFrom === null ? "2004" : state.yearFrom;
     const yearTo = state.yearTo === null ? "2018" : state.yearTo;
     const params : string = "?startPeriod=" + yearFrom + "&endPeriod=" + yearTo;
     
+    //create url
     url = baseUrl + keys + "/all/" + params;
     
     console.log(url);
