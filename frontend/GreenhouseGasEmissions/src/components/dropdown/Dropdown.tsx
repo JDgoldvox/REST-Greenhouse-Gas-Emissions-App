@@ -33,51 +33,31 @@ export default function Dropdown({label , items , isOpen , setIsOpen, AddToListC
     }
 
     return (
-    <label> {label}
-        <div className={style.DropdownWrapper}>
-            <button onClick={() => setIsOpen(!isOpen)}>
-                Select {label}
-            </button>
-
-            {isOpen && (
-                <div className={style.DropdownMenu}> {
-                    items.map((item,index) => (
-                        <label key={`${item.id}-${index}`}>
-                            <input type="checkbox" value={item.id} onChange={(e) => {
-                                console.log(e.target.checked);
-                                ChangeState(
-                                    e.target.checked,
-                                    item.id,
-                                    param
-                                )
-                            }}/>
-                            {item.name}
-                        </label> ))
-                }
-                </div>
-            )}
-        </div>
-    </label>
-)
+        <label> {label}
+            <div className={style.DropdownWrapper}>
+                <button onClick={() => setIsOpen(!isOpen)}>
+                    Select {label}
+                </button>
+    
+                {isOpen && (
+                    <div className={style.DropdownMenu}> {
+                        items.map((item,index) => (
+                            <label key={`${item.id}-${index}`}>
+                                <input type="checkbox" value={item.id} onChange={(e) => {
+                                    console.log(e.target.checked);
+                                    ChangeState(
+                                        e.target.checked,
+                                        item.id,
+                                        param
+                                    )
+                                }}/>
+                                {item.name}
+                            </label> ))
+                    }
+                    </div>
+                )}
+            </div>
+        </label>
+    )
 }
 
-// return (
-//     <label> {label}
-//         <div className={style.DropdownWrapper}>
-//             <button onClick={() => setIsOpen(!isOpen)}>
-//                 Select {label}
-//             </button>
-//
-//             {isOpen && (
-//                 <div className={style.DropdownMenu}> {
-//                     items.map((item,index) => (
-//                         <label key={`${item.id}-${index}`}>
-//                             <input type="checkbox" value={item.id} onChange={() => {}}/>
-//                             {item.name}
-//                         </label> ))
-//                 }
-//                 </div>
-//             )}
-//         </div>
-//     </label>
-// )
