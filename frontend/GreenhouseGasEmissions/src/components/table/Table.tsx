@@ -1,9 +1,18 @@
 ﻿import style from "./Table.module.css"
 import generalStyle from "../../General.module.css"
+import {useEffect} from "react";
 
-export default function Table()
+interface TableProps{
+    url : string | null;
+}
+
+export default function Table({url} : TableProps)
 {
-    
+    //fetch data from url
+    useEffect(() =>
+    {
+        console.log("url changed");
+    },[url])
     
     return (
         <table className = {style.table}>

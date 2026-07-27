@@ -60,11 +60,11 @@ export default function Filter({setUrl}: FilterProps)
     
     // State tracking for filter selections
     const [filters, setFilters] = useState<FilterState>({
-        frequency: null,
-        pollutant: null,
-        yearFrom: null,
-        yearTo: null,
-        unit: null,
+        frequency: "A",
+        pollutant: "CO",
+        yearFrom: null, //include every possible date
+        yearTo: null, //include every possible date
+        unit: null, //leave as default from api
         countries: null,
         interactors: null,
         accountingEntries: null,
@@ -139,8 +139,8 @@ export default function Filter({setUrl}: FilterProps)
                     accountingEntries: accountingEntries,
                     countries: countries,
                     interactors: interactors,
-                    yearFrom: ["2012", "2014"],
-                    yearTo: ["2012", "2014"], 
+                    yearFrom: ["all", "2012", "2014"],
+                    yearTo: ["all", "2012", "2014"], 
                 }
             });
         }
@@ -154,7 +154,9 @@ export default function Filter({setUrl}: FilterProps)
                  {/*Reporting Frequency */}
                 <li>
                     <label> Reporting Frequency
-                        <select onChange={(e) => HandleSingleFilter(e.target.value, "frequency")}>
+                        <select
+                            value={filters.frequency || "A"}
+                            onChange={(e) => HandleSingleFilter(e.target.value, "frequency")}>
                             {MapDropDownOptionsForSelects(options.frequency)}
                         </select>
                     </label>
@@ -163,7 +165,9 @@ export default function Filter({setUrl}: FilterProps)
                 {/* Air pollutant */}
                 <li>
                     <label> Air pollutant
-                        <select onChange={(e) => HandleSingleFilter(e.target.value, "pollutant")}>
+                        <select
+                            value={filters.pollutant || "CO"}
+                            onChange={(e) => HandleSingleFilter(e.target.value, "pollutant")}>
                             {MapDropDownOptionsForSelects(options.pollutant)}
                         </select>
                     </label>
@@ -185,12 +189,16 @@ export default function Filter({setUrl}: FilterProps)
                 <li>
                     <div className = {generalStyle.flex}>
                         <label> from
-                            <select onChange={(e) => HandleSingleFilter(e.target.value, "yearFrom")}>
+                            <select
+                                value={filters.yearFrom || "2012"}
+                                onChange={(e) => HandleSingleFilter(e.target.value, "yearFrom")}>
                                 {MapDropDownOptionsForSelects(options.yearFrom)}
                             </select>
                         </label>
                         <label> to
-                            <select onChange={(e) => HandleSingleFilter(e.target.value, "yearTo")}>
+                            <select
+                                value={filters.yearTo || "2014"}
+                                onChange={(e) => HandleSingleFilter(e.target.value, "yearTo")}>
                                 {MapDropDownOptionsForSelects(options.yearTo)}
                             </select>
                         </label>

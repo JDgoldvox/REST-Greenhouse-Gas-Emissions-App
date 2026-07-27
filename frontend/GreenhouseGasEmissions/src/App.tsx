@@ -16,7 +16,7 @@ function App() {
                   <Filter setUrl = {setUrl}/>
               </div>
               <div className = {style.tableLayout}>
-                  <Table/>
+                  <Table url={url}/>
               </div>
           </div>
       </>

@@ -36,7 +36,6 @@ export function UrlService(state: FilterState)
     //set keys
     if(state.frequency !== null) freq = state.frequency;
     if(state.countries !== null) refArea = ConcatinateList(state.countries);
-    if(state.pollutant !== null) demandProd = state.pollutant;
     if(state.accountingEntries !== null) accountingEntry = ConcatinateList(state.accountingEntries);
     if(state.interactors !== null) interactors = ConcatinateList(state.interactors);
     if(state.pollutant !== null) airpol = state.pollutant;
@@ -50,9 +49,16 @@ export function UrlService(state: FilterState)
     
     // create param string
     // example startPeriod=2004&endPeriod=2018
-    const yearFrom = state.yearFrom === null ? "2004" : state.yearFrom;
-    const yearTo = state.yearTo === null ? "2018" : state.yearTo;
-    const params : string = "?startPeriod=" + yearFrom + "&endPeriod=" + yearTo;
+    let params : string = "?";
+    if(state.yearFrom != null)
+    {
+        params += "startPeriod=" + state.yearFrom + "&";
+    }
+
+    if(state.yearTo != null)
+    {
+        params += "endPeriod=" + state.yearTo + "&";
+    }
     
     //create url
     url = baseUrl + keys + "/all/" + params;

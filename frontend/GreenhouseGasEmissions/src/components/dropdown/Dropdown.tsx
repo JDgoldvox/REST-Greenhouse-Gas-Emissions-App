@@ -32,6 +32,13 @@ export default function Dropdown({label , items , isOpen , setIsOpen, AddToListC
         return <></>
     }
 
+    const sortedItems = [...items].sort((a, b) =>
+        (a.name).localeCompare(
+            b.name, 
+            "en-us",
+            { numeric: true, sensitivity: 'base' })
+    );
+    
     return (
         <label> {label}
             <div className={style.DropdownWrapper}>
@@ -41,9 +48,12 @@ export default function Dropdown({label , items , isOpen , setIsOpen, AddToListC
     
                 {isOpen && (
                     <div className={style.DropdownMenu}> {
-                        items.map((item,index) => (
+                        sortedItems.map((item,index) => (
                             <label key={`${item.id}-${index}`}>
-                                <input type="checkbox" value={item.id} onChange={(e) => {
+                                <input
+                                    type="checkbox" 
+                                    value={item.id} 
+                                    onChange={(e) => {
                                     console.log(e.target.checked);
                                     ChangeState(
                                         e.target.checked,
