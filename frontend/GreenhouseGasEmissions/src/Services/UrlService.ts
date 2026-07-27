@@ -49,7 +49,7 @@ export function UrlService(state: FilterState)
     
     // create param string
     // example startPeriod=2004&endPeriod=2018
-    let params : string = "?";
+    let params : string = "?dimensionAtObservation=AllDimensions&";
     if(state.yearFrom != null)
     {
         params += "startPeriod=" + state.yearFrom + "&";

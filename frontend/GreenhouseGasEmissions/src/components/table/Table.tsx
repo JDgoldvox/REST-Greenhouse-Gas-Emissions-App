@@ -1,6 +1,6 @@
 ﻿import style from "./Table.module.css"
 import generalStyle from "../../General.module.css"
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {TableDataService} from "../../Services/TableDataService.ts";
 
 interface TableProps{
@@ -9,12 +9,43 @@ interface TableProps{
 
 export default function Table({url} : TableProps)
 {
-    //fetch data from url
+    const [data, setData] = useState<any[] | null>();
+    //let dataPerCountry : Map<string, any[]> = new Map();
+
+    const [tableHeader, setTableHeader] = useState<string[]>(["Year"]);
+    
+    //const [tableData, setTableData] = useState<string[]>([]);
+    
     useEffect(() =>
     {
+        //fetch data from url
         async function fetchData()
         {
-            await TableDataService(url);
+            const result = await TableDataService(url);
+            setData(result);
+            //console.log(result);
+
+            let countryData : Map<string, any[]> = new Map<string, any[]>();
+            
+            result?.forEach( (item) => {
+                const key = item.REF_AREA;
+
+                // check if map already has this key
+                if (!countryData.has(key)) {
+                    countryData.set(key, [item]);
+                } else {
+                    countryData.get(key)?.push(item);
+                }
+            })
+            
+            //get unique country names
+            countryData.forEach((country) =>{
+                tableHeader.push(country[0].REF_AREA);
+            })
+            
+            console.log(tableHeader);
+            //console.log(dataPerCountry);
+            
         }
 
         fetchData();
@@ -29,12 +60,15 @@ export default function Table({url} : TableProps)
             </caption>
             <thead>
                 <tr>
-                    <th>Year</th>
-                    <th>Insert Country Name</th>
-                    <th>Insert Country Name</th>
+                    {
+                        tableHeader.map((header, index) => (
+                            <th key={index}>{header}</th>
+                        ))
+                    }
                 </tr>
             </thead>
             <tbody>
+            
                 <tr>
                     <td>1999</td>
                     <td>112314</td>
