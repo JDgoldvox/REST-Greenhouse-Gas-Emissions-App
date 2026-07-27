@@ -1,6 +1,7 @@
 ﻿import style from "./Table.module.css"
 import generalStyle from "../../General.module.css"
 import {useEffect} from "react";
+import {TableDataService} from "../../Services/TableDataService.ts";
 
 interface TableProps{
     url : string | null;
@@ -11,6 +12,13 @@ export default function Table({url} : TableProps)
     //fetch data from url
     useEffect(() =>
     {
+        async function fetchData()
+        {
+            await TableDataService(url);
+        }
+
+        fetchData();
+        
         console.log("url changed");
     },[url])
     
