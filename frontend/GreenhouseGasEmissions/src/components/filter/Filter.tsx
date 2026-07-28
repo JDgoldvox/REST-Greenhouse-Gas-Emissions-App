@@ -221,7 +221,7 @@ export default function Filter({setUrl}: FilterProps)
 
                 {/* Apply Filters button */}
                 <li>
-                    <button onClick={() => {
+                    <button className={style.applyButton} onClick={() => {
                         const url : string | null = UrlService(filters);
                         setUrl(url);
                     }}> Apply Filters </button>
