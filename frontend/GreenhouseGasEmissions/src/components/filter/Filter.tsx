@@ -60,8 +60,8 @@ export default function Filter({setUrl}: FilterProps)
     
     // State tracking for filter selections
     const [filters, setFilters] = useState<FilterState>({
-        frequency: "A",
-        pollutant: "CO",
+        frequency: null,
+        pollutant: null,
         yearFrom: null, //include every possible date
         yearTo: null, //include every possible date
         unit: null, //leave as default from api

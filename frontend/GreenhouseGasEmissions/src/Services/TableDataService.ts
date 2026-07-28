@@ -8,8 +8,8 @@ export async function TableDataService(url : string | null): Promise<any[] | und
     }
     
     try {
-        const betterUrl2 = "https://data.un.org/ws/rest/data/ESTAT,DF_SEEA_AEA,1.3/.AU+CA+NZ+ID......GHG..../ALL/?detail=full&dimensionAtObservation=TIME_PERIOD"
-        const rawData= await FetchTableData(betterUrl2);
+        //const betterUrl2 = "https://data.un.org/ws/rest/data/ESTAT,DF_SEEA_AEA,1.3/.AU+CA+NZ+ID......GHG..../ALL/?detail=full&dimensionAtObservation=TIME_PERIOD"
+        const rawData= await FetchTableData(url);
         return await RawDataToRowData(rawData);
     }
     catch (error) {

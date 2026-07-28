@@ -21,7 +21,7 @@ export function UrlService(state: FilterState)
     
     //default keys
     let freq = "";
-    let refArea =  "AU";
+    let refArea =  "";
     let demandProd = "" //not included
     let accountingEntry = "";
     let counterpartArea = ""; //not included
@@ -50,12 +50,12 @@ export function UrlService(state: FilterState)
     // create param string
     // example startPeriod=2004&endPeriod=2018
     let params : string = "?dimensionAtObservation=AllDimensions&";
-    if(state.yearFrom != null)
+    if(state.yearFrom != null && state.yearFrom != "all")
     {
         params += "startPeriod=" + state.yearFrom + "&";
     }
 
-    if(state.yearTo != null)
+    if(state.yearTo != null && state.yearTo != "all")
     {
         params += "endPeriod=" + state.yearTo + "&";
     }
@@ -71,7 +71,7 @@ export function UrlService(state: FilterState)
 function ConcatinateList(list : string[])
 {
     //return default if length is somehow 0
-    if(list.length === 0) return ".";
+    if(list.length === 0) return "";
     
     let keyString : string = "";
     list.map(item =>{
