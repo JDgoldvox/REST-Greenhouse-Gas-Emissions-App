@@ -17,10 +17,11 @@ export default function Table({url} : TableProps)
         //fetch data from url
         async function fetchData()
         {
-             const rowData = await TableDataService(url);
+             let rowData = await TableDataService(url);
              if(rowData != null) {
-                 setTableRow(rowData);
                  setTableHeader(rowData[0]);
+                 rowData = rowData.slice(1); //remove headers (first row) before giving to table rows
+                 setTableRow(rowData);
              }
         }
 
@@ -43,24 +44,16 @@ export default function Table({url} : TableProps)
             </thead>
             <tbody>
             {
-                tableRow.map((row: any[], index) =>
+                tableRow.map((row: any[], rowIndex) =>
                 {
-                    if(index === 0) return;
                     return (
-                        <>
-                            <tr>
-                                {
-                                    row.map((data) => {
-                                        return (
-                                            <>
-                                                <td>{data}</td>
-                                            </>
-                                        )
-                                    })
-                                }
-                                
-                            </tr>
-                        </>
+                        <tr key={rowIndex}>
+                            {
+                                row.map((data, dataIndex) => {
+                                    return (<td key={dataIndex}>{data}</td>)
+                                })
+                            }
+                        </tr>
                     );
                 })
             }
