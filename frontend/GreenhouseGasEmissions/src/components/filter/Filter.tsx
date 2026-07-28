@@ -109,9 +109,9 @@ export default function Filter({setUrl}: FilterProps)
         });
     }
 
-    useEffect(() => {
-        console.log("Filters changed:", filters);
-    }, [filters]);
+    // useEffect(() => {
+    //     console.log("Filters changed:", filters);
+    // }, [filters]);
     
     useEffect(()=> {
         async function FetchOptionList() : Promise<void>  {
@@ -133,7 +133,7 @@ export default function Filter({setUrl}: FilterProps)
                 
                  {/*Reporting Frequency */}
                 <li>
-                    <label> Reporting Frequency
+                    <label className={style.fontToWhite}> Reporting Frequency
                         <select
                             value={filters.frequency || "A"}
                             onChange={(e) => HandleSingleFilter(e.target.value, "frequency")}>
@@ -144,7 +144,7 @@ export default function Filter({setUrl}: FilterProps)
 
                 {/* Air pollutant */}
                 <li>
-                    <label> Air pollutant
+                    <label className={style.fontToWhite}> Air pollutant
                         <select
                             value={filters.pollutant || "CO"}
                             onChange={(e) => HandleSingleFilter(e.target.value, "pollutant")}>
@@ -168,14 +168,14 @@ export default function Filter({setUrl}: FilterProps)
                 {/* time line */}
                 <li>
                     <div className = {generalStyle.flex}>
-                        <label> from
+                        <label className={style.fontToWhite}> from
                             <select
                                 value={filters.yearFrom || "all"}
                                 onChange={(e) => HandleSingleFilter(e.target.value, "yearFrom")}>
                                 {MapDropDownOptionsForSelects(options.yearFrom)}
                             </select>
                         </label>
-                        <label> to
+                        <label className={style.fontToWhite}> to
                             <select
                                 value={filters.yearTo || "all"}
                                 onChange={(e) => HandleSingleFilter(e.target.value, "yearTo")}>
@@ -200,7 +200,7 @@ export default function Filter({setUrl}: FilterProps)
 
                 {/* Unit of measurement */}
                 <li>
-                    <label> Unit
+                    <label className={style.fontToWhite}> Unit
                         <select className={style.selectBox} onChange={(e) => HandleSingleFilter(e.target.value, "unit")}>
                             {MapDropDownOptionsForSelects(options.unit)}
                         </select>

@@ -60,7 +60,8 @@ export default function Dropdown({label , items , isOpen , setIsOpen, AddToListC
     );
     
     return (
-        <label> {label}
+        <label>
+            <span className={style.fontToWhite}>{label}</span>
             <div className={style.DropdownWrapper}>
                 <button onClick={() => setIsOpen(!isOpen)}>
                     Select {label}

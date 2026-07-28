@@ -1,7 +1,6 @@
 ﻿import style from "./Table.module.css"
-import generalStyle from "../../General.module.css"
 import {useEffect, useState} from "react";
-import {TableDataService} from "../../Services/TableDataService.ts";
+import {TableCaptionService, TableDataService} from "../../Services/TableDataService.ts";
 
 interface TableProps{
     url : string | null;
@@ -11,6 +10,7 @@ export default function Table({url} : TableProps)
 {
     const [tableHeader, setTableHeader] = useState<string[]>([]);
     const [tableRow, setTableRow] = useState<any[]>([]);
+    const [tableCaption, setTableCaption] = useState<string>("apply filters to see data");
     
     useEffect(() =>
     {
@@ -23,6 +23,13 @@ export default function Table({url} : TableProps)
                     setTableHeader(rowData[0]);
                     rowData = rowData.slice(1); //remove headers (first row) before giving to table rows
                     setTableRow(rowData);
+                }
+                
+                //set caption
+                const caption = await TableCaptionService(url);
+                if(caption != null)
+                {
+                    setTableCaption(caption);
                 }
             }
             catch(error)
@@ -37,7 +44,7 @@ export default function Table({url} : TableProps)
     return (
         <table className = {style.table}>
             <caption>
-                insert epic name
+                {tableCaption}
             </caption>
             <thead>
                 <tr>

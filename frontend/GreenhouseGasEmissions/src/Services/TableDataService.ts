@@ -1,5 +1,29 @@
 ﻿import { SDMXParser } from "sdmx-json-parser";
 
+export async function TableCaptionService(url : string | null): Promise<string | undefined>
+{
+    if(url == null){
+        console.log("url is null");
+        return "apply filters to see data";
+    }
+
+    try {
+        const rawData= await FetchTableData(url);
+        let caption: string = "";
+        if(rawData[0] != null)
+        {
+            caption = "Pollution Accounts (" +
+                rawData[0].FREQ + " through " + rawData[0].DEMAND_PROD +
+                " with " + rawData[0].ACCOUNTING_ENTRY + " accounting entry)";
+        }
+
+        return caption;
+    }
+    catch (error) {
+        console.error("Error fetching data:", error);
+    }
+}
+
 export async function TableDataService(url : string | null): Promise<any[] | undefined> 
 {
     if(url == null){
@@ -8,7 +32,6 @@ export async function TableDataService(url : string | null): Promise<any[] | und
     }
     
     try {
-        //const betterUrl2 = "https://data.un.org/ws/rest/data/ESTAT,DF_SEEA_AEA,1.3/.AU+CA+NZ+ID......GHG..../ALL/?detail=full&dimensionAtObservation=TIME_PERIOD"
         const rawData= await FetchTableData(url);
         return await RawDataToRowData(rawData);
     }
@@ -21,7 +44,6 @@ async function FetchTableData(url : string) : Promise<any[]>
 {
     const parser = new SDMXParser();
     await parser.getDatasets(url);
-    console.log(parser.getAnnotations());
     return parser.getData(); // returns a simplified array of observations with dimension and attributes values
 }
 
@@ -51,7 +73,6 @@ async function RawDataToRowData(rawData: any[]) : Promise<any[]>
     
     SetTableHeaders(countryData, tableRows);
     SetRowData(countryData, tableRows, earliestYear, latestYear);
-    console.log(tableRows);
     
     return tableRows;
 }
