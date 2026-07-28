@@ -13,6 +13,7 @@
 .table th, 
 .table td
 {
+    font-family: var(--global-font), serif;
     text-align: left;
     padding: 0.6em;
 }
@@ -22,13 +23,9 @@
 }
 
 .table caption{
+    font-family: var(--global-font), serif;
     padding: 1em;
     font-style: italic;
     letter-spacing: 1px;
-}
-
-.table tfoot
-{
-    background-color: #952bcc;
 }
 

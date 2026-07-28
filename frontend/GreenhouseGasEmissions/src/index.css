@@ -1,5 +1,10 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url("fonts/Roboto_Mono/RobotoMono-VariableFont_wght.ttf") format('truetype');
+}
+
 :root {
-  
+  --global-font: 'Roboto', serif;
 }
 
 body {
@@ -8,15 +13,14 @@ body {
 
 h1,
 h2 {
-
+  font-family: var(--global-font), serif;
 }
 
-h1 {
-
-}
-h2 {
-
-}
 p {
+  font-family: var(--global-font), serif;
   margin: 0;
+}
+
+label{
+  font-family: var(--global-font), serif;
 }

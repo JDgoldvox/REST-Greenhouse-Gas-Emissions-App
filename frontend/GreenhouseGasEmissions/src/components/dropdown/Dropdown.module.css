@@ -4,6 +4,7 @@
 }
 
 .DropdownMenu {
+    font-family: var(--global-font), serif;
     Display: flex;
     flex-direction: column;
     gap: 2px;
@@ -17,4 +18,8 @@
     z-index: 1000;
 }
 
+.input
+{
+    font-family: var(--global-font), serif;
+}
 
