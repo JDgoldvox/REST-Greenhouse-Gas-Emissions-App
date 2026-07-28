@@ -9,43 +9,87 @@ interface TableProps{
 
 export default function Table({url} : TableProps)
 {
-    const [data, setData] = useState<any[] | null>();
-    //let dataPerCountry : Map<string, any[]> = new Map();
-
     const [tableHeader, setTableHeader] = useState<string[]>(["Year"]);
-    
-    //const [tableData, setTableData] = useState<string[]>([]);
+    const [tableRow, setTableRow] = useState<any[]>([]);
     
     useEffect(() =>
     {
+        let earliestYear : number = -1;
+        let latestYear : number = -1;
+        
         //fetch data from url
         async function fetchData()
         {
             const result = await TableDataService(url);
-            setData(result);
-            //console.log(result);
-
-            let countryData : Map<string, any[]> = new Map<string, any[]>();
+            let countryData : Map<string, Map<number, any>> = new Map<string, Map<number, any>>();
             
             result?.forEach( (item) => {
                 const key = item.REF_AREA;
-
-                // check if map already has this key
-                if (!countryData.has(key)) {
-                    countryData.set(key, [item]);
-                } else {
-                    countryData.get(key)?.push(item);
+                const year : number = Number(item.TIME_PERIOD);
+                
+                //check and set if earliest year so far
+                if(earliestYear === -1 || year < earliestYear)
+                {
+                    earliestYear = year;
                 }
+                
+                //check and set if latest year so far
+                if(latestYear === -1 || year > latestYear)
+                {
+                    latestYear = year;
+                }
+                
+                // Add country to map
+                if (!countryData.has(key)) {
+                    countryData.set(key, new Map<number, any>());
+                }
+                
+                // Add year to country data
+                countryData.get(key)?.set(year, [item]);
             })
+            
+            console.log(countryData);
             
             //get unique country names
-            countryData.forEach((country) =>{
-                tableHeader.push(country[0].REF_AREA);
+            countryData.forEach((_ , key) =>{
+                tableHeader.push(key);
             })
             
-            console.log(tableHeader);
-            //console.log(dataPerCountry);
+            //loop over each year that has data
+            let tempRows : any[] = [];
+            for(let i: number = earliestYear; i <= latestYear; i++)
+            {
+                let existingData : string[] = [];
+                
+                //find which country data exists for this year
+                countryData.forEach((dataMap) =>
+                {
+                    //search whether year exists
+                    const newData = dataMap.get(i);
+                    if(newData != undefined) {
+                        existingData.push(newData[0].value);
+                    }
+                    else
+                    {
+                        existingData.push("-");
+                    }
+                })
+                
+                //if any data exists for this year, add it to the table rows
+                let row: any[] = [];
+                row.push(i);
+                existingData.forEach((data) =>
+                {
+                    row.push(data);
+                })
+                
+                //add row to table rows
+                tempRows.push(row);
+            }
             
+            //set row data
+            setTableRow(tempRows);
+            console.log(tempRows);
         }
 
         fetchData();
