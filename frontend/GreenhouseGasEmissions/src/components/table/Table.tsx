@@ -14,18 +14,24 @@ export default function Table({url} : TableProps)
     
     useEffect(() =>
     {
-        //fetch data from url
+        //fetch data from url, update when url changes
         async function fetchData()
         {
-             let rowData = await TableDataService(url);
-             if(rowData != null) {
-                 setTableHeader(rowData[0]);
-                 rowData = rowData.slice(1); //remove headers (first row) before giving to table rows
-                 setTableRow(rowData);
-             }
+            try{
+                let rowData = await TableDataService(url);
+                if(rowData != null) {
+                    setTableHeader(rowData[0]);
+                    rowData = rowData.slice(1); //remove headers (first row) before giving to table rows
+                    setTableRow(rowData);
+                }
+            }
+            catch(error)
+            {
+                console.error("Error fetching data:", error);
+            }
         }
 
-        fetchData();
+        void fetchData();
     },[url])
     
     return (

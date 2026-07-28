@@ -7,6 +7,7 @@ export async function RequestAllOptions(): Promise<OptionList> {
     let optionEndpoints = endpoints.endpoints.optionFilters;
     let yearFrom : (string)[] = [];
     let yearTo : (string)[] = [];
+    const maxYear: number = 2026, minYear: number = 1950;
 
     //Fire all network requests simultaneously in parallel
     const [
@@ -28,7 +29,7 @@ export async function RequestAllOptions(): Promise<OptionList> {
     //set year options
     yearFrom.push("all");
     yearTo.push("all");
-    for(let i: number = 1950; i <= 2026; i++)
+    for(let i: number = minYear; i <= maxYear; i++)
     {
         yearFrom.push(i.toString());
         yearTo.push(i.toString());
