@@ -3,23 +3,27 @@ import {CodelistService} from "./CodelistService.ts";
 import type {OptionList} from "../components/filter/Filter.tsx";
 
 export async function RequestAllOptions(): Promise<OptionList> {
-
-    let frequency : { id: string; name: string }[] = [];
-    let pollutant : { id: string; name: string }[] = [];
-    let unit : { id: string; name: string }[] = [];
-    let countries : { id: string; name: string }[] = [];
-    let interactors : { id: string; name: string }[] = [];
-    let accountingEntries : { id: string; name: string }[] = [];
-    let yearFrom : (string)[] = [];
-    let yearTo : (string)[] = [];
     
     let optionEndpoints = endpoints.endpoints.optionFilters;
-    frequency = await CodelistService({url: optionEndpoints.frequency});
-    pollutant = await CodelistService({url: optionEndpoints.pollutant});
-    unit = await CodelistService({url: optionEndpoints.unit});
-    countries = await CodelistService({url: optionEndpoints.country});
-    interactors = await CodelistService({url: optionEndpoints.interactor});
-    accountingEntries = await CodelistService({url: optionEndpoints.accountingEntry});
+    let yearFrom : (string)[] = [];
+    let yearTo : (string)[] = [];
+
+    //Fire all network requests simultaneously in parallel
+    const [
+        frequency,
+        pollutant,
+        unit,
+        countries,
+        interactors,
+        accountingEntries
+    ] = await Promise.all([
+        CodelistService({url: optionEndpoints.frequency}),
+        CodelistService({url: optionEndpoints.pollutant}),
+        CodelistService({url: optionEndpoints.unit}),
+        CodelistService({url: optionEndpoints.country}),
+        CodelistService({url: optionEndpoints.interactor}),
+        CodelistService({url: optionEndpoints.accountingEntry}),
+    ]);
     
     //set year options
     yearFrom.push("all");

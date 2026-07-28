@@ -114,12 +114,17 @@ export default function Filter({setUrl}: FilterProps)
     }, [filters]);
     
     useEffect(()=> {
-        
-        async function FetchOptionList() {
-            const optionList = await RequestAllOptions();
-            setOptions(optionList);
+        async function FetchOptionList() : Promise<void>  {
+            try {
+                const optionList = await RequestAllOptions();
+                setOptions(optionList);
+            } catch (error) {
+                console.error("Error fetching options:", error);
+            }
         }
-        FetchOptionList();
+        
+        //don't await, just let the options fetch in background
+        void FetchOptionList();
     }, []);
     
     return(
