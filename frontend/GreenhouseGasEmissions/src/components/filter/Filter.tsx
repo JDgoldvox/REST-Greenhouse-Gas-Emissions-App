@@ -3,9 +3,8 @@ import generalStyle from "../../General.module.css"
 // @ts-ignore
 import DropDown from "../dropdown/DropDown.tsx"
 import {useEffect, useState} from "react"
-import {CodelistService} from "../../Services/CodelistService.ts";
 import {UrlService} from "../../Services/UrlService.ts";
-import endpoints from "../../config/endpoints.json"
+import {RequestAllOptions} from "../../Services/OptionService.ts";
 
 interface FilterProps {
     setUrl : (url: string | null) => void;
@@ -27,7 +26,7 @@ export interface Option{
     name: string
 }
 
-interface OptionList
+export interface OptionList
 {
     frequency: Option[];
      pollutant: Option[];
@@ -115,36 +114,12 @@ export default function Filter({setUrl}: FilterProps)
     }, [filters]);
     
     useEffect(()=> {
-        let frequency : { id: string; name: string }[] = [];
-        let pollutant : { id: string; name: string }[] = [];
-        let unit : { id: string; name: string }[] = [];
-        let countries : { id: string; name: string }[] = [];
-        let interactors : { id: string; name: string }[] = [];
-        let accountingEntries : { id: string; name: string }[] = [];
         
-        async function RequestAllOptions() {
-            let optionEndpoints = endpoints.endpoints.optionFilters;
-            frequency = await CodelistService({url: optionEndpoints.frequency});
-            pollutant = await CodelistService({url: optionEndpoints.pollutant});
-            unit = await CodelistService({url: optionEndpoints.unit});
-            countries = await CodelistService({url: optionEndpoints.country});
-            interactors = await CodelistService({url: optionEndpoints.interactor});
-            accountingEntries = await CodelistService({url: optionEndpoints.accountingEntry});
-            
-            setOptions( () => {
-                return {
-                    frequency: frequency,
-                    pollutant: pollutant,
-                    unit: unit,
-                    accountingEntries: accountingEntries,
-                    countries: countries,
-                    interactors: interactors,
-                    yearFrom: ["all", "2012", "2014"],
-                    yearTo: ["all", "2012", "2014"], 
-                }
-            });
+        async function FetchOptionList() {
+            const optionList = await RequestAllOptions();
+            setOptions(optionList);
         }
-        RequestAllOptions();
+        FetchOptionList();
     }, []);
     
     return(
