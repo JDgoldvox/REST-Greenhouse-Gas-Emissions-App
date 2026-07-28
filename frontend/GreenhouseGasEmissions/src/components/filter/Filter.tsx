@@ -76,8 +76,6 @@ export default function Filter({setUrl}: FilterProps)
             ...prev,
             [param]: value
         }));
-        
-        //console.log(`Adding : ${value}`);
     }
     
     function AddToMultipleFilters(value: string, param: keyof FilterState)

@@ -23,19 +23,27 @@ export default function Dropdown({label , items , isOpen , setIsOpen, AddToListC
             //local mutable set
             const previousItems = new Set(prev);
             
+            //update local checked state (pure)
             if(isChecked)
             {
                 previousItems.add(value);
-                AddToListCallback(value, param);
             }
             else
             {
                 previousItems.delete(value);
-                removeFromListCallback(value, param);
             }
-            
             return previousItems;
         })
+
+        //Update global state with side effect
+        if(isChecked)
+        {
+            AddToListCallback(value, param);
+        }
+        else
+        {
+            removeFromListCallback(value, param);
+        }
     }
     
     if(items === undefined || items === null)
