@@ -1,6 +1,7 @@
 ﻿import style from "./Dropdown.module.css"
 import type {Option} from "../filter/Filter.tsx"
 import type {FilterState} from "../filter/Filter.tsx"
+import {useState} from "react";
 
 interface DropdownProps {
     label: string;
@@ -13,17 +14,28 @@ interface DropdownProps {
 }        
         
 export default function Dropdown({label , items , isOpen , setIsOpen, AddToListCallback, removeFromListCallback, param} : DropdownProps) {
+
+    const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
     
-    function ChangeState( isAdd: boolean, value: string, param: keyof FilterState)
+    function ChangeDropdownState(isChecked: boolean, value: string, param: keyof FilterState)
     {
-        if(isAdd)
-        {
-            AddToListCallback(value, param);
-        }
-        else
-        {
-            removeFromListCallback(value, param);
-        }
+        setCheckedItems(prev => {
+            //local mutable set
+            const previousItems = new Set(prev);
+            
+            if(isChecked)
+            {
+                previousItems.add(value);
+                AddToListCallback(value, param);
+            }
+            else
+            {
+                previousItems.delete(value);
+                removeFromListCallback(value, param);
+            }
+            
+            return previousItems;
+        })
     }
     
     if(items === undefined || items === null)
@@ -53,14 +65,15 @@ export default function Dropdown({label , items , isOpen , setIsOpen, AddToListC
                                 <input
                                     type="checkbox" 
                                     value={item.id} 
+                                    checked={checkedItems.has(item.id)}
                                     onChange={(e) => {
-                                    console.log(e.target.checked);
-                                    ChangeState(
-                                        e.target.checked,
-                                        item.id,
-                                        param
-                                    )
-                                }}/>
+                                        ChangeDropdownState(
+                                            e.target.checked,
+                                            item.id,
+                                            param
+                                        )
+                                    }}
+                                />
                                 {item.name}
                             </label> ))
                     }
