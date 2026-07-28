@@ -57,7 +57,7 @@ export function UrlService(state: FilterState)
 
     if(state.yearTo != null && state.yearTo != "all")
     {
-        params += "endPeriod=" + state.yearTo + "&";
+        params += "endPeriod=" + state.yearTo;
     }
     
     //create url
@@ -80,8 +80,6 @@ function ConcatinateList(list : string[])
     
     //remove the last plus
     keyString = keyString.slice(0, keyString.length - 1);
-    
-    //console.log(keyString);
     
     return keyString;
 }

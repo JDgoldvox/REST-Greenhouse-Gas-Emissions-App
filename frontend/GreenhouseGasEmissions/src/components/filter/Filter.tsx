@@ -188,14 +188,14 @@ export default function Filter({setUrl}: FilterProps)
                     <div className = {generalStyle.flex}>
                         <label> from
                             <select
-                                value={filters.yearFrom || "2012"}
+                                value={filters.yearFrom || "all"}
                                 onChange={(e) => HandleSingleFilter(e.target.value, "yearFrom")}>
                                 {MapDropDownOptionsForSelects(options.yearFrom)}
                             </select>
                         </label>
                         <label> to
                             <select
-                                value={filters.yearTo || "2014"}
+                                value={filters.yearTo || "all"}
                                 onChange={(e) => HandleSingleFilter(e.target.value, "yearTo")}>
                                 {MapDropDownOptionsForSelects(options.yearTo)}
                             </select>
@@ -219,7 +219,7 @@ export default function Filter({setUrl}: FilterProps)
                 {/* Unit of measurement */}
                 <li>
                     <label> Unit
-                        <select onChange={(e) => HandleSingleFilter(e.target.value, "unit")}>
+                        <select className={style.selectBox} onChange={(e) => HandleSingleFilter(e.target.value, "unit")}>
                             {MapDropDownOptionsForSelects(options.unit)}
                         </select>
                     </label>
