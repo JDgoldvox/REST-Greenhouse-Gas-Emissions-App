@@ -1,9 +1,10 @@
 ﻿import type {FilterState} from "../components/filter/Filter.tsx";
+import endpoints from "../config/endpoints.json";
 
 export function UrlService(state: FilterState)
 {
     let url : string | null = null;
-    const baseUrl = "https://data.un.org/ws/rest/data/ESTAT,DF_SEEA_AEA,1.3/";
+    const baseUrl = endpoints.endpoints.baseUrl;
     
     // order of keys
     // FREQ,

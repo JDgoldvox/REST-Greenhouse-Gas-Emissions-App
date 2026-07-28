@@ -5,6 +5,7 @@ import DropDown from "../dropdown/DropDown.tsx"
 import {useEffect, useState} from "react"
 import {CodelistService} from "../../Services/CodelistService.ts";
 import {UrlService} from "../../Services/UrlService.ts";
+import endpoints from "../../config/endpoints.json"
 
 interface FilterProps {
     setUrl : (url: string | null) => void;
@@ -122,12 +123,13 @@ export default function Filter({setUrl}: FilterProps)
         let accountingEntries : { id: string; name: string }[] = [];
         
         async function RequestAllOptions() {
-            frequency = await CodelistService({url: "https://data.un.org/WS/rest/codelist/SDMX/CL_FREQ"});
-            pollutant = await CodelistService({url: "https://data.un.org/WS/rest/codelist/ESTAT/CL_AIRPOL"});
-            unit = await CodelistService({url: "https://data.un.org/WS/rest/codelist/IMF/CL_UNIT"});
-            countries = await CodelistService({url: "https://data.un.org/WS/rest/codelist/IMF/CL_AREA"});
-            interactors = await CodelistService({url: "https://data.un.org/WS/rest/codelist/ESTAT/CL_INTERACTORS"});
-            accountingEntries = await CodelistService({url: "https://data.un.org/WS/rest/codelist/IMF/CL_ACCOUNT_ENTRY"});
+            let optionEndpoints = endpoints.endpoints.optionFilters;
+            frequency = await CodelistService({url: optionEndpoints.frequency});
+            pollutant = await CodelistService({url: optionEndpoints.pollutant});
+            unit = await CodelistService({url: optionEndpoints.unit});
+            countries = await CodelistService({url: optionEndpoints.country});
+            interactors = await CodelistService({url: optionEndpoints.interactor});
+            accountingEntries = await CodelistService({url: optionEndpoints.accountingEntry});
             
             setOptions( () => {
                 return {

@@ -1,5 +1,13 @@
 ﻿{
   "endpoints": {
-    "baseUrl": 
+    "baseUrl": "https://data.un.org/ws/rest/data/ESTAT,DF_SEEA_AEA,1.3/",
+    "optionFilters": {
+      "frequency": "https://data.un.org/WS/rest/codelist/SDMX/CL_FREQ",
+      "pollutant": "https://data.un.org/WS/rest/codelist/ESTAT/CL_AIRPOL",
+      "unit": "https://data.un.org/WS/rest/codelist/IMF/CL_UNIT",
+      "country": "https://data.un.org/WS/rest/codelist/IMF/CL_AREA",
+      "interactor": "https://data.un.org/WS/rest/codelist/ESTAT/CL_INTERACTORS",
+      "accountingEntry": "https://data.un.org/WS/rest/codelist/IMF/CL_ACCOUNT_ENTRY"
+    }
   }
 }
