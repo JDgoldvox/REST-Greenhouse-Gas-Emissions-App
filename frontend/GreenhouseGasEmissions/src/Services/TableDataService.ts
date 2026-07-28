@@ -1,24 +1,23 @@
 ﻿import { SDMXParser } from "sdmx-json-parser";
 
-export async function TableDataService(url : string | null) {
-    
+export async function TableDataService(url : string | null): Promise<any[] | undefined> 
+{
     if(url == null){
         console.log("url is null");
         return;
     }
     
     try {
-        const betterUrl2 = "https://data.un.org/ws/rest/data/ESTAT,DF_SEEA_AEA,1.3/.AU+CA+NZ......GHG..../ALL/?detail=full&dimensionAtObservation=TIME_PERIOD"
+        const betterUrl2 = "https://data.un.org/ws/rest/data/ESTAT,DF_SEEA_AEA,1.3/.AU+CA+NZ+ID......GHG..../ALL/?detail=full&dimensionAtObservation=TIME_PERIOD"
         const rawData= await FetchTableData(betterUrl2);
-        const rowData= await CleanRawData(rawData);
-        return rowData;
+        return await RawDataToRowData(rawData);
     }
     catch (error) {
         console.error("Error fetching data:", error);
     }
 }
 
-async function FetchTableData(url : string)
+async function FetchTableData(url : string) : Promise<any[]>
 {
     const parser = new SDMXParser();
     await parser.getDatasets(url);
@@ -26,22 +25,20 @@ async function FetchTableData(url : string)
     return parser.getData(); // returns a simplified array of observations with dimension and attributes values
 }
 
-async function CleanRawData(rawData: any[]) : Promise<any[]>
+async function RawDataToRowData(rawData: any[]) : Promise<any[]>
 {
     let tableRows : any[] = [];
-    let earliestYear : number = -1;
-    let latestYear : number = -1;
+    let earliestYear : number = Infinity;
+    let latestYear : number = -Infinity;
     let countryData : Map<string, Map<number, any>> = new Map<string, Map<number, any>>();
     
     rawData?.forEach( (item) => {
         const key = item.REF_AREA;
         const year : number = Number(item.TIME_PERIOD);
 
-        //check and set if earliest year so far
-        if(earliestYear === -1 || year < earliestYear)  earliestYear = year;
-        
-        //check and set if latest year so far
-        if(latestYear === -1 || year > latestYear) latestYear = year;
+        //check and set if earliest year and latest so far
+        if(year < earliestYear)  earliestYear = year;
+        if(year > latestYear) latestYear = year;
 
         // Add country to map
         if (!countryData.has(key)) {
@@ -51,23 +48,29 @@ async function CleanRawData(rawData: any[]) : Promise<any[]>
         // Add year to country data
         countryData.get(key)?.set(year, [item]);
     })
-
-    //console.log(countryData);
-
-    //get unique country names, and set table headers
-    {
-        let tableHeader : string[] = ["Year"];
-        countryData.forEach((_ , key) =>{
-            tableHeader.push(key);
-        })
-
-        //add to row data as first item
-        tableRows.push(tableHeader);
-    }
     
+    SetTableHeaders(countryData, tableRows);
+    SetRowData(countryData, tableRows, earliestYear, latestYear);
+    console.log(tableRows);
+    
+    return tableRows;
+}
 
+function SetTableHeaders(countryData : Map<string, Map<number, any>>, tableRows : any[])
+{
+    let tableHeader : string[] = ["Year"];
+    countryData.forEach((_ , key) =>{
+        tableHeader.push(key);
+    })
+
+    //add to row data as first item
+    tableRows.push(tableHeader);
+}
+
+function SetRowData(countryData : Map<string, Map<number, any>>, tableRows : any[], earliestYear: number, latestYear: number)
+{
     //loop over each year that has data
-    for(let i: number = earliestYear; i <= latestYear; i++)
+    for (let i: number = earliestYear; i <= latestYear; i++)
     {
         let existingData : string[] = [];
 
@@ -86,19 +89,7 @@ async function CleanRawData(rawData: any[]) : Promise<any[]>
         })
 
         //if any data exists for this year, add it to the table rows
-        let row: any[] = [];
-        row.push(i);
-        existingData.forEach((data) =>
-        {
-            row.push(data);
-        })
-
-        //add row to table rows
+        const row = [i, ...existingData];
         tableRows.push(row);
     }
-
-    //set row data
-    console.log(tableRows);
-    return tableRows;
 }
-
